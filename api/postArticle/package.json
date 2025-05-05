@@ -1,0 +1,8 @@
+// api/postArticle/package.json
+{
+    "name": "post-article",
+    "version": "1.0.0",
+    "main": "index.js",
+    "type": "module"
+  }
+  
