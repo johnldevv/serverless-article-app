@@ -1,3 +1,13 @@
+# Node
 node_modules/
+
+# Builds
 dist/
+*.zip
+
+# Environment files
 .env*
+*.tfstate
+*.tfstate.*
+.terraform/
+terraform.tfvars
