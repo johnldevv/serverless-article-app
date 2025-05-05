@@ -1,22 +1,25 @@
 #!/bin/bash
 
-set -e  # Stop script on error
+set -e  # Exit on error
 
 LAMBDA_NAME="postArticle"
-DIST_PATH="dist/${LAMBDA_NAME}.zip"
 LAMBDA_SRC="api/${LAMBDA_NAME}"
+DIST_DIR="dist"
+DIST_PATH="$(realpath ${DIST_DIR})/${LAMBDA_NAME}.zip"
 ENV_DIR="infra/environments/staging"
+
+# Ensure dist/ directory exists
+mkdir -p "${DIST_DIR}"
 
 echo "📦 Zipping Lambda function: ${LAMBDA_NAME}..."
 cd "${LAMBDA_SRC}"
-zip -r "../../../${DIST_PATH}" . > /dev/null
+zip -r "${DIST_PATH}" . > /dev/null
 cd - > /dev/null
 echo "✅ Zipped to ${DIST_PATH}"
 
-echo "🚀 Deploying to AWS (staging)..."
+echo "🚀 Deploying staging environment to AWS via Terraform..."
 cd "${ENV_DIR}"
 terraform init -input=false > /dev/null
 terraform apply -auto-approve
 cd - > /dev/null
-
-echo "✅ Deployment complete: Lambda + API Gateway (staging)"
+echo "✅ Deployed Lambda + API Gateway to AWS (staging)"
