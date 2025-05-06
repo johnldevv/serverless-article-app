@@ -76,3 +76,27 @@ resource "aws_lambda_function" "get_articles" {
   filename      = "${path.module}/../../../dist/getArticles.zip"
   source_code_hash = filebase64sha256("${path.module}/../../../dist/getArticles.zip")
 }
+
+resource "aws_apigatewayv2_integration" "get_articles_integration" {
+  api_id                = aws_apigatewayv2_api.articles_api.id
+  integration_type      = "AWS_PROXY"
+  integration_uri       = aws_lambda_function.get_articles.invoke_arn
+  integration_method    = "POST"
+  payload_format_version = "2.0"
+}
+
+#Route: GET /articles
+resource "aws_apigatewayv2_route" "get_articles_route" {
+  api_id    = aws_apigatewayv2_api.articles_api.id
+  route_key = "GET /articles"
+  target    = "integrations/${aws_apigatewayv2_integration.get_articles_integration.id}"
+}
+
+#Permission for API Gateway to call Lambda
+resource "aws_lambda_permission" "allow_apigw_invoke_get_articles" {
+  statement_id  = "AllowInvokeFromAPIGatewayGetArticles"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.get_articles.arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.articles_api.execution_arn}/*/*"
+}
