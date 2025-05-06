@@ -1,5 +1,8 @@
 {
     "name": "post-article",
     "version": "1.0.0",
-    "main": "index.js"
-  }
+    "main": "index.js",
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.803.0"
+    }
+}
