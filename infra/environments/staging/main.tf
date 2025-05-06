@@ -3,6 +3,7 @@ provider "aws" {
   region = "ap-southeast-1" # or your preferred region
 }
 
+# IAM Role for Lambda Execution
 resource "aws_iam_role" "lambda_exec" {
   name = "lambda_exec_role"
 
@@ -20,6 +21,39 @@ resource "aws_iam_role" "lambda_exec" {
   })
 }
 
+# IAM Policy: Allow Lambda to access DynamoDB
+resource "aws_iam_role_policy" "lambda_dynamodb_access" {
+  name = "lambda-dynamodb-access"
+  role = aws_iam_role.lambda_exec.id
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "dynamodb:PutItem",
+          "dynamodb:Scan"
+        ],
+        Effect   = "Allow",
+        Resource = aws_dynamodb_table.articles.arn
+      }
+    ]
+  })
+}
+
+# DynamoDB Table for Articles
+resource "aws_dynamodb_table" "articles" {
+  name         = "articles-staging"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+}
+
+# Lambda: postArticle
 resource "aws_lambda_function" "post_article" {
   function_name = "post-article-staging"
   runtime       = "nodejs18.x"
