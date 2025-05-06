@@ -66,3 +66,13 @@ resource "aws_lambda_permission" "allow_apigw_invoke" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.articles_api.execution_arn}/*/*"
 }
+
+# get_articles
+resource "aws_lambda_function" "get_articles" {
+  function_name = "get-articles-staging"
+  runtime       = "nodejs18.x"
+  handler       = "index.handler"
+  role          = aws_iam_role.lambda_exec.arn
+  filename      = "${path.module}/../../../dist/getArticles.zip"
+  source_code_hash = filebase64sha256("${path.module}/../../../dist/getArticles.zip")
+}
