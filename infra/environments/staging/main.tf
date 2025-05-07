@@ -67,6 +67,14 @@ resource "aws_lambda_function" "post_article" {
 resource "aws_apigatewayv2_api" "articles_api" {
   name          = "articles-api-staging"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins = ["http://localhost:5173"]
+    allow_methods = ["GET", "POST", "OPTIONS"]
+    allow_headers = ["Content-Type"]
+    expose_headers = ["Content-Type"]
+    max_age = 3600
+  }
 }
 
 # Integration: API Gateway → Lambda
