@@ -137,7 +137,7 @@ resource "aws_lambda_permission" "allow_apigw_invoke_get_articles" {
 
 # S3 Bucket for Frontend (Staging)
 resource "aws_s3_bucket" "frontend_staging" {
-  bucket = "article-app-staging-frontend"
+  bucket = "article-app-staging-frontend-jqcqy"
   force_destroy = true
 }
 
