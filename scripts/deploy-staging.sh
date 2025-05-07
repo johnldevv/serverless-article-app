@@ -37,3 +37,20 @@ terraform init -input=false > /dev/null
 terraform apply -auto-approve
 cd - > /dev/null
 echo "✅ Deployed Lambda functions + API Gateway to AWS (staging)"
+
+# Extract API base URL from Terraform and generate frontend .env
+echo "🌐 Generating frontend .env file with API Gateway URL..."
+
+API_URL=$(cd "${ENV_DIR}" && terraform output -raw api_gateway_base_url)
+echo "VITE_API_URL=${API_URL}" > frontend/.env
+
+echo "✅ .env generated at frontend/.env with VITE_API_URL=${API_URL}"
+
+
+
+# Start frontend in Docker
+echo "🐳 Starting SvelteKit frontend in Docker..."
+
+cd frontend
+docker compose down > /dev/null 2>&1 || true
+docker compose up --build

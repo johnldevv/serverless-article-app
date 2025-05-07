@@ -1,6 +1,10 @@
 # infra/environments/staging/main.tf
+variable "region" {
+  default = "ap-southeast-1"
+}
+
 provider "aws" {
-  region = "ap-southeast-1" # or your preferred region
+  region = var.region
 }
 
 # IAM Role for Lambda Execution
@@ -194,4 +198,8 @@ resource "aws_s3_bucket_policy" "frontend_staging_public" {
 # Output S3 website URL
 output "frontend_staging_site_url" {
   value = aws_s3_bucket_website_configuration.frontend_staging.website_endpoint
+}
+
+output "api_gateway_base_url" {
+  value = "https://${aws_apigatewayv2_api.articles_api.id}.execute-api.${var.region}.amazonaws.com/${aws_apigatewayv2_stage.default.name}"
 }

@@ -8,6 +8,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    environment:
-      - VITE_API_URL=https://t6291w17uk.execute-api.ap-southeast-1.amazonaws.com
+    env_file:
+      - .env
     command: npm run dev -- --host 0.0.0.0
