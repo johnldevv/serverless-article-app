@@ -1,7 +1,7 @@
 import fs from 'fs';
 import https from 'https';
 
-const API_URL = process.env.API_URL || 'https://ggpajgqe08.execute-api.ap-southeast-1.amazonaws.com/staging/getArticles';
+const API_URL = process.env.API_URL || 'https://ggpajgqe08.execute-api.ap-southeast-1.amazonaws.com/staging/articles';
 
 function fetchArticles() {
   return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ function fetchArticles() {
 (async () => {
   try {
     const entries = await fetchArticles();
-    fs.writeFileSync('prerender-entries.json', JSON.stringify(entries, null, 2));
+    fs.writeFileSync('frontend/prerender-entries.json', JSON.stringify(entries, null, 2));
     console.log('✅ Generated prerender-entries.json');
   } catch (err) {
     console.error('❌ Failed to generate entries:', err);
