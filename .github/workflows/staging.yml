@@ -32,6 +32,11 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      - name: Generate prerender entries
+        run: node scripts/generate-prerender-entries.js
+        env:
+          API_URL: ${{ secrets.API_URL }}
+
       - name: Build frontend
         working-directory: frontend
         run: npm run build
