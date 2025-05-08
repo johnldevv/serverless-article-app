@@ -1,0 +1,41 @@
+name: Deploy Svelte Frontend to Staging
+
+on:
+  push:
+    branches:
+      - staging
+
+permissions:
+  contents: read
+  id-token: write  # Safe to keep for future OIDC support
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: ap-southeast-1
+      STAGING_BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync frontend/build "s3://$STAGING_BUCKET_NAME" --delete
