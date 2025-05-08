@@ -7,7 +7,7 @@ const config = {
     kit: {
       adapter: adapter(),
       prerender: {
-        entries: ['/', ...prerenderEntries]
+        entries: ['/', '/articles', ...prerenderEntries]
       }
     }
   };
