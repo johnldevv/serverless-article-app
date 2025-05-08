@@ -38,6 +38,19 @@ terraform apply -auto-approve
 cd - > /dev/null
 echo "✅ Deployed Lambda functions + API Gateway to AWS (staging)"
 
+
+# Extract S3 bucket name and push to GitHub Secrets
+BUCKET_NAME=$(cd "${ENV_DIR}" && terraform output -raw staging_bucket_name)
+
+gh secret set STAGING_BUCKET_NAME \
+  --repo johnldevv/serverless-article-app \
+  --body "$BUCKET_NAME"
+
+echo "✅ Pushed S3 bucket name to GitHub Secrets"
+
+
+
+
 # Extract API base URL from Terraform and generate frontend .env
 echo "🌐 Generating frontend .env file with API Gateway URL..."
 
