@@ -10,6 +10,7 @@ exports.handler = async () => {
   const articles = result.Items.map(item => ({
     id: item.id.S,
     title: item.title.S,
+    slug: item.slug?.S || '',
     content: item.content.S
   }));
 
