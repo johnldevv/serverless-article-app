@@ -203,3 +203,11 @@ output "frontend_staging_site_url" {
 output "api_gateway_base_url" {
   value = "https://${aws_apigatewayv2_api.articles_api.id}.execute-api.${var.region}.amazonaws.com/${aws_apigatewayv2_stage.default.name}"
 }
+
+output "staging_bucket_name" {
+  value = aws_s3_bucket.frontend_staging.bucket
+}
+
+output "staging_bucket_url" {
+  value = "s3://${aws_s3_bucket.frontend_staging.bucket}"
+}
